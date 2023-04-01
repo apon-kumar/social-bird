@@ -64,10 +64,6 @@ class authController extends Controller
         return view('auth.register');
     }
 
-    public function home()
-    {
-        return view('home');
-    }
 
     public function logout()
     {

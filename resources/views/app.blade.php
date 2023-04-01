@@ -14,48 +14,12 @@
 </head>
 <body>
 
-    {{-- <nav class="navbar navbar-expand-lg bg-light sticky-top">
-        
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Socialbird</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu" aria-controls="sideMenu" aria-expanded="false">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-    </nav> --}}
-
     <nav class="navbar navbar-expand-lg bg-light border sticky-top">
         <div class="container-fluid">
           <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu" aria-controls="sideMenu" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a class="navbar-brand" href="">SocialBird</a>
+          <a class="navbar-brand" href="{{ route('home') }}">SocialBird</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -63,21 +27,26 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
+                <a class="nav-link active mt-2" aria-current="page" href="{{ route('home') }}">Home</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" href="" data-bs-toggle="dropdown">
+                  @if(Auth::user()->avatar)
+                    <img src="{{asset('/storage/avatars/'.auth()->user()->avatar)}}" alt="avatar" class="rounded-circle me-2" style="width: 38px; height: 38px; object-fit: cover"/>
+                  @else
+                  <img src="{{asset('/storage/avatars/default_avatar.png')}}" alt="avatar" class="rounded-circle me-2" style="width: 38px; height: 38px; object-fit: cover"/>
+                  @endif
                   {{ Auth::user()->name }}
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="">Profile</a></li>
+                  <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
                   <li><a class="dropdown-item" href="">Settings</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="{{ url('/logout') }}">Logout</a></li>
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">About US</a>
+                <a class="nav-link mt-2" href="">About US</a>
               </li>
               
               {{-- <li class="nav-item">
@@ -94,6 +63,13 @@
     </nav>
 
     @yield('content')
-
+{{-- <script>
+  function viewPost()
+  { 
+    // document.getElementById('comment_btn').onclick = function(){
+      window.location.href = "{{ route('view_post', $post->id) }}";
+    // }; 
+  }
+</script> --}}
 </body>
 </html>
