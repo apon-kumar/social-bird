@@ -67,7 +67,7 @@
                         <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <!-- body -->
-                      <form action="{{ route('post.create') }}" method="post">
+                      <form action="{{ route('post.create') }}" method="post" enctype="multipart/form-data">
                       @csrf
                       <div class="modal-body">
                         <div class="my-1 p-1">
@@ -155,7 +155,7 @@
                       {{ $post->body }}
                     </p>
                     @if($post->photo)
-                    <img src="https://source.unsplash.com/random/12" alt="post image" class="img-fluid rounded"/> 
+                    <img src="{{ asset('/storage/post-image/'.$post->photo) }}" alt="post image" class="img-fluid rounded"/> 
                     @endif
                     
                   </div>
@@ -171,11 +171,12 @@
                         <i class="text-danger fab fa-gratipay"></i>
                         <i class="text-warning fas fa-grin-squint"></i>
                       </div>
-                    </div>
+                    </div>                                  
+                  </div> 
+
                   <!-- comment & like bar -->
-                  <!-- comments start-->
-                    
-                  </div>
+                  <!-- comments start--> 
+                  
                   <div>
                       <div class="pointer d-flex" data-bs-toggle="collapse" data-bs-target="#collapsePost1" aria-epanded="false" aria-controls="collapsePost1">
                         <p class="mx-2">2 Comments</p>
@@ -183,24 +184,37 @@
                       <hr />
                       <!-- comment & like bar -->
                       <div class="d-flex justify-content-around">
-                        @if ()
-                          <div onclick="event.preventDefault();" class="rounded d-flex justify-content-center align-items-center pointer text-muted">
-                            {{-- <a href="" class="text-decoration-none text-secondary"> --}}
-                            <span class="fas fa-thumbs-up me-2"></span>
-                            Like
-                          </div>
-                        @endif           
-                        <div class="d-flex justify-content-center align-items-center">
-                          <a href="{{ '/home/'.$post->id.'/viewpost' }}" class="text-decoration-none text-muted">
-                            <span class="fas fa-comment-alt"></span>
-                            Comment
-                          </a>
+                        <div id="{{ 'post-like-'.$post->id }}" onclick="event.preventDefault();document.getElementById('like-btn-{{ $post->id }}').submit();" class="rounded d-flex justify-content-center align-items-center text-secondary">
+                          {{-- <a href="" class="text-decoration-none text-secondary"> --}}
+                          <span class="fas fa-thumbs-up me-2"></span>
+                          <form style="display:none" id="{{ 'like-btn-'.$post->id }}" action="{{ route('post.like', $post->id) }}" method="post">
+                            @csrf
+                          </form>
+                          Like
                         </div>
-                        
-                      </div>
-                      @foreach ($post->comment as $comment)
-                          <p>{{ $comment->body }}</p>
-                      @endforeach
+                        @foreach($post->like as $like)
+                        @if($like->user_id == auth()->user()->id)
+                          {{-- <div onclick="event.preventDefault();document.getElementById('like-true')" class="rounded d-flex justify-content-center align-items-center pointer text-primary">
+                            <span class="fas fa-thumbs-up me-2"></span>
+                            <form style="display:none" id="like-true" action="{{ route('post.like', $post->id) }}" method="post">
+                              @csrf
+                            </form>
+                            Like
+                          </div> --}}
+                          <script>
+                            document.getElementById('post-like-{{ $post->id }}').setAttribute('class', 'rounded d-flex justify-content-center align-items-center pointer text-primary');
+                          </script>
+                        @endif
+                        @endforeach
+
+
+                          <div class="d-flex justify-content-center align-items-center">
+                            <a href="{{ '/home/'.$post->id.'/viewpost' }}" class="text-decoration-none text-muted">
+                              <span class="fas fa-comment-alt"></span>
+                              Comment
+                            </a>
+                          </div>                       
+                      </div>                   
                   </div>
                   <!-- end -->
                 </div>

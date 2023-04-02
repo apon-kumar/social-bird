@@ -39,7 +39,7 @@
                       {{ $post->body }}
                     </p>
                     @if($post->photo)
-                    <img src="https://source.unsplash.com/random/12" alt="post image" class="img-fluid rounded"/> 
+                    <img src="{{ asset('/storage/post-image/'.$post->photo) }}" alt="post image" class="img-fluid rounded"/> 
                     @endif
                     
                   </div>
@@ -73,7 +73,7 @@
                           <i class="fas fa-thumbs-up me-2"></i>
                           <p class="m-0">Like</p>
                         </div>
-                        <div class="d-flex justify-content-center align-items-center pointer text-secondary p-1" id="comment_btn" data-bs-toggle="collapse" data-bs-target="#collapsePost1" aria-expanded="false" aria-controls="collapsePost1">
+                        <div class="d-flex justify-content-center align-items-center pointer text- p-1" id="comment_btn" data-bs-toggle="collapse" data-bs-target="#collapsePost1" aria-expanded="false" aria-controls="collapsePost1">
                             <i class="fas fa-comment-alt me-3"></i>
                             <p class="m-0">Comment</p> 
                         </div>

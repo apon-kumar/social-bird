@@ -36,4 +36,5 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('post/{id}/comment', [postController::class, 'createComment'])->name('comment.create');
     Route::get('profile', [profileController::class, 'profile'])->name('profile');
     Route::post('/profile/avatar', [profileController::class, 'uploadAvatar'])->name('avatar.upload');
+    Route::post('/post/{id}/like', [postController::class, 'likePost'])->name('post.like');
 });
