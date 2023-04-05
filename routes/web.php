@@ -37,4 +37,5 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('profile', [profileController::class, 'profile'])->name('profile');
     Route::post('/profile/avatar', [profileController::class, 'uploadAvatar'])->name('avatar.upload');
     Route::post('/post/{id}/like', [postController::class, 'likePost'])->name('post.like');
+    Route::post('/home/post/{id}/delete', [postController::class, 'deletePost'])->name('post.delete');
 });

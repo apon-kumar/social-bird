@@ -17,14 +17,22 @@ class postController extends Controller
         if($request->hasFile('image')){
             $filename = $request->image->getClientOriginalName();
             $request->image->storeAs('post-image', $filename, 'public');
+        
+            $data = [
+                'body'    => $request->body,
+                'photo'   => $filename,
+                'user_id' => auth()->user()->id,
+            ];
+            Post::create($data);
+            return redirect('home');
         }
         $data = [
             'body'    => $request->body,
-            'photo'   => $filename,
             'user_id' => auth()->user()->id,
         ];
         Post::create($data);
         return redirect('home');
+
     }
 
     public function createComment(Request $request, $id)
@@ -70,6 +78,12 @@ class postController extends Controller
             Like::create($data);
         }
 
+        return redirect('home');
+    }
+
+    public function deletePost($id)
+    {
+        Post::where('id', $id)->delete();
         return redirect('home');
     }
 }
