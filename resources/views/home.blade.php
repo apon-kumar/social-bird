@@ -12,7 +12,7 @@
                             <h5 class="offcanvas-title" id="sideMenuleLabel">Menu</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sideMenu" aria-label="Close"></button>
                         </div>
-                            <ul class="nav nav-pills nav-fill flex-column">
+                            {{-- <ul class="nav nav-pills nav-fill flex-column">
                                 <li class="nav-item">
                                     <a class="nav-link active" aria-current="page" href="#">Active</a>
                                 </li>
@@ -34,7 +34,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link disabled">Disabled</a>
                                 </li>
-                            </ul>
+                            </ul> --}}
                     </div>
                 </aside>
 
@@ -57,7 +57,7 @@
                 </div>
             </div>
             {{-- post Modal --}}
-            <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true" data-bs-backdrop="false">
+            <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true" data-bs-backdrop="true">
                 <div class="modal-dialog modal-dialog-centered">
 
                     <div class="modal-content">
@@ -144,8 +144,8 @@
                         <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" href="#">Edit Post</a>
                       </li>
                       <li class="d-flex align-items-center">
-                        <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" onclick="alert('are you sure you want to delete this post!');document.getElementById('delete-btn-{{ $post->id }}').submit();">Delete Post</a>
-                        <form style="display: none" id="delete-btn-{{ $post->id }}" action="{{ route('post.delete', $post->id) }}" method="post">
+                        <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" onclick="alert('are you sure you want to delete this post!');document.getElementById('delete-post-{{ $post->id }}').submit();">Delete Post</a>
+                        <form style="display: none" id="delete-post-{{ $post->id }}" action="{{ route('post.delete', $post->id) }}" method="post">
                           @csrf
                         </form>
                       </li>
@@ -167,8 +167,37 @@
                   <!-- likes & comments -->
 
                   <div class="post__comment d-flex">
-                    <i class="text-primary fas fa-thumbs-up px-2"></i>
-                    <p class="m-0 text-muted fs-7">Phu, Tuan, and 3 others</p>
+                    <div class=" d-flex justify-content-start mt-3">
+                      <i class="text-primary fas fa-thumbs-up me-2 mt-1 ms-2"></i>
+                      <p class="m-0 text-muted fs-7" data-bs-toggle="modal" data-bs-target="#likeModal">Likes</p>
+                    </div>
+                  {{-- Like Modal --}}
+                      <div class="modal fade" id="likeModal" tabindex="-1" aria-labelledby="likeModalLabel" aria-hidden="true" data-bs-backdrop="true">
+                        <div class="modal-dialog modal-dialog-center">
+                          <div class="modal-content">
+                            <div class="modal-body">
+                              <div >
+                                  @foreach($post->like as $like)
+                                  <div class="d-flex justify-content-start mt-1">
+                                      @if($like->user->avatar)
+                                        <img src="{{asset('/storage/avatars/'.$like->user->avatar)}}" alt="avatar" class="rounded-circle me-2" style="width: 38px; height: 38px; object-fit: cover"/>
+                                      @else
+                                        <img src="{{asset('/storage/avatars/default_avatar.png')}}" alt="avatar" class="rounded-circle me-2" style="width: 38px; height: 38px; object-fit: cover"/>
+                                      @endif
+                                      <p>{{ $like->user->name }}</p>
+                                  </div>
+
+                                  @endforeach
+                              </div>
+  
+                            </div>
+                          </div>
+                        </div>
+
+                          
+                          
+
+                      </div>
                     <!-- likes -->
                     <div class="d-flex align-items-center top-0 start-0 position-absolute" style="height: 50px; z-index: 5">
                       <div class="me-2">
@@ -183,8 +212,11 @@
                   <!-- comments start--> 
                   
                   <div>
-                      <div class="pointer d-flex" data-bs-toggle="collapse" data-bs-target="#collapsePost1" aria-epanded="false" aria-controls="collapsePost1">
-                        <p class="mx-2">2 Comments</p>
+                      <div class="d-flex">
+                        <a class="mx-2 cursor-pointer text-decoration-none text-muted" href="{{ '/home/'.$post->id.'/viewpost' }}">
+                          <span class="fas fa-comment-alt text-primary"></span>
+                          Comments
+                        </a>
                       </div>
                       <hr />
                       <!-- comment & like bar -->
@@ -228,6 +260,7 @@
         </div>
         {{-- Chatbar --}}
         <div class="col-3 bg-light">
+            {{-- <p>this is chatbar and many other things</p>
             <p>this is chatbar and many other things</p>
             <p>this is chatbar and many other things</p>
             <p>this is chatbar and many other things</p>
@@ -246,8 +279,7 @@
             <p>this is chatbar and many other things</p>
             <p>this is chatbar and many other things</p>
             <p>this is chatbar and many other things</p>
-            <p>this is chatbar and many other things</p>
-            <p>this is chatbar and many other things</p>
+            <p>this is chatbar and many other things</p> --}}
         </div>
     </div>
 </div>

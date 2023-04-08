@@ -46,6 +46,12 @@ class postController extends Controller
         return redirect()->back();
     }
 
+    public function deleteComment($id)
+    {
+        Comment::where('id', $id)->delete();
+        return redirect()->back();
+    }
+
     public function viewPost(Post $post)
     {
         $commentobj = new Comment();
