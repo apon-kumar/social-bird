@@ -67,7 +67,7 @@
                         <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <!-- body -->
-                      <form action="{{ route('post.create') }}" method="post" enctype="multipart/form-data">
+                      <form action="{{ route('post.create') }}" name="postForm" method="post" enctype="multipart/form-data">
                       @csrf
                       <div class="modal-body">
                         <div class="my-1 p-1">
@@ -87,11 +87,13 @@
                             </div>
                             <!-- text -->
                             <div>
-                              <textarea cols="30" rows="5" name="body" class="form-control border-0"></textarea>
+                              <textarea cols="30" rows="5" name="body" class="form-control border"></textarea>
                             </div>
-                            <div class="d-flex justify-content-between">
-                              <input type="file" name="image">
-                              <button class="btn-close p"></button>
+                            <div class="d-flex justify-content-between mt-2">
+                              <input type="file" name="image" id="image">
+                              {{-- <input type="text" id="name"> --}}
+                              <button class="btn-close p" onclick="event.preventDefault();document.getElementById('image').value = '';"></button>
+
                             </div>
                             <!-- options -->
                             {{-- <div class="d-flex justify-content-between border border-1 border-light rounded p-3 mt-3">
@@ -141,7 +143,7 @@
                     <!-- edit menu -->
                     <ul class="dropdown-menu border-0 shadow" aria-labelledby="post1Menu">
                       <li class="d-flex align-items-center">
-                        <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" href="#">Edit Post</a>
+                        <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" href="{{ route('post.edit', $post->id) }}">Edit Post</a>
                       </li>
                       <li class="d-flex align-items-center">
                         <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" onclick="alert('are you sure you want to delete this post!');document.getElementById('delete-post-{{ $post->id }}').submit();">Delete Post</a>
@@ -198,14 +200,7 @@
                           
 
                       </div>
-                    <!-- likes -->
-                    <div class="d-flex align-items-center top-0 start-0 position-absolute" style="height: 50px; z-index: 5">
-                      <div class="me-2">
-                        <i class="text-primary fas fa-thumbs-up"></i>
-                        <i class="text-danger fab fa-gratipay"></i>
-                        <i class="text-warning fas fa-grin-squint"></i>
-                      </div>
-                    </div>                                  
+                                 
                   </div> 
 
                   <!-- comment & like bar -->

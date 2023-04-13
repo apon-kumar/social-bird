@@ -49,12 +49,15 @@
                                 <div class="col-8 text-left">
                                     
                                 </div>
-                                <div class="col-4 text-right">
+                                <div class="col-4 text-right mt-2">
                                     <input type="submit" class="btn btn-primary" value=" Register " />
                                 </div>
                             </div>
-                            <div>
-                                <a href="{{ route('login') }}" class="btn btn-link">Already have an Account? Log In.</a>
+                            <div class="d-flex justify-content-center mt-4">
+                                <a href="{{ route('signup.view') }}" class="text-decoration-none">Sign Up with Google</a>
+                            </div>
+                            <div class="d-flex justify-content-center mt-4">
+                                <a href="{{ route('login') }}" class="text-decoration-none">Already have an Account? Log In.</a>
                             </div>
                         </form>
                     </div>

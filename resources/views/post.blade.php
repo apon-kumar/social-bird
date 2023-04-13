@@ -4,6 +4,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
+          @if ($errors->has('error'))
+            <p class="text-danger fs-4">{{ $errors->first('error') }}</p>
+          @endif
             <div class="bg-white p-4 rounded border mt-3">
                 <!-- author -->
                 <div class="d-flex justify-content-between">
@@ -24,10 +27,13 @@
                   <!-- edit menu -->
                   <ul class="dropdown-menu border-0 shadow" aria-labelledby="post1Menu">
                     <li class="d-flex align-items-center">
-                      <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" href="#">Edit Post</a>
+                      <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" href="{{ route('post.edit', $post->id) }}">Edit Post</a>
                     </li>
                     <li class="d-flex align-items-center">
-                      <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" href="#">Delete Post</a>
+                      <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" onclick="alert('are you sure you want to delete this post!');document.getElementById('delete-post-{{ $post->id }}').submit();">Delete Post</a>
+                      <form style="display: none" id="delete-post-{{ $post->id }}" action="{{ route('post.delete', $post->id) }}" method="post">
+                        @csrf
+                      </form>
                     </li>
                   </ul>
                 </div>
@@ -46,16 +52,38 @@
                   <!-- likes & comments -->
         
                   <div class="post__comment d-flex">
-                    <i class="text-primary fas fa-thumbs-up px-2 pt-1"></i>
-                    <p class="m-0 text-muted fs-7">Phu, Tuan, and 3 others</p>
-                    <!-- likes -->
-                    {{-- <div class="d-flex align-items-center top-0 start-0 position-absolute" style="height: 50px; z-index: 5">
-                      <div class="me-2">
-                        <i class="text-primary fas fa-thumbs-up"></i>
-                        <i class="text-danger fab fa-gratipay"></i>
-                        <i class="text-warning fas fa-grin-squint"></i>
+                    <div class=" d-flex justify-content-start mt-3">
+                      <i class="text-primary fas fa-thumbs-up me-2 mt-1 ms-2"></i>
+                      <p class="m-0 text-muted fs-7" data-bs-toggle="modal" data-bs-target="#likeModal">Likes</p>
+                    </div>
+                {{-- Like Modal --}}
+                    <div class="modal fade" id="likeModal" tabindex="-1" aria-labelledby="likeModalLabel" aria-hidden="true" data-bs-backdrop="true">
+                      <div class="modal-dialog modal-dialog-center">
+                        <div class="modal-content">
+                          <div class="modal-body">
+                            <div>
+                                @foreach($post->like as $like)
+                                <div class="d-flex justify-content-start mt-1">
+                                    @if($like->user->avatar)
+                                      <img src="{{asset('/storage/avatars/'.$like->user->avatar)}}" alt="avatar" class="rounded-circle me-2" style="width: 38px; height: 38px; object-fit: cover"/>
+                                    @else
+                                      <img src="{{asset('/storage/avatars/default_avatar.png')}}" alt="avatar" class="rounded-circle me-2" style="width: 38px; height: 38px; object-fit: cover"/>
+                                    @endif
+                                    <p>{{ $like->user->name }}</p>
+                                </div>
+
+                                @endforeach
+                            </div>
+
+                          </div>
+                        </div>
                       </div>
-                  </div> --}}
+
+                        
+                        
+
+                    </div>
+
                   <!-- comments start-->
                     
                   </div>
@@ -63,28 +91,45 @@
                     <div class="border-0">
 
                         <div class="d-flex">
-                          <p class="mx-2">2 Comments</p>
+                          <a class="mx-2 cursor-pointer text-decoration-none text-muted disabled" href="{{ '/home/'.$post->id.'/viewpost' }}" onclick="event.preventDefault();">
+                            <span class="fas fa-comment-alt text-primary"></span>
+                            Comments
+                          </a>
                         </div>
                       <hr />
                       <!-- comment & like bar -->
                       <div class="d-flex justify-content-around">
-                        <div
-                          class="rounded d-flex justify-content-center align-items-center pointer text-secondary p-1">
-                          <i class="fas fa-thumbs-up me-2"></i>
-                          <p class="m-0">Like</p>
+                        <div id="{{ 'post-like-'.$post->id }}" onclick="event.preventDefault();document.getElementById('like-btn-{{ $post->id }}').submit();" class="rounded d-flex justify-content-center align-items-center text-secondary">
+                          {{-- <a href="" class="text-decoration-none text-secondary"> --}}
+                          <span class="fas fa-thumbs-up me-2"></span>
+                          <form style="display:none" id="{{ 'like-btn-'.$post->id }}" action="{{ route('post.like', $post->id) }}" method="post">
+                            @csrf
+                          </form>
+                          Like
                         </div>
-                        <div class="d-flex justify-content-center align-items-center pointer text- p-1" id="comment_btn" data-bs-toggle="collapse" data-bs-target="#collapsePost1" aria-expanded="false" aria-controls="collapsePost1">
-                            <i class="fas fa-comment-alt me-3"></i>
-                            <p class="m-0">Comment</p> 
-                        </div>
-                            {{-- <div class="d-flex justify-content-center align-items-center">
+                        @foreach($post->like as $like)
+                        @if($like->user_id == auth()->user()->id)
+                          {{-- <div onclick="event.preventDefault();document.getElementById('like-true')" class="rounded d-flex justify-content-center align-items-center pointer text-primary">
+                            <span class="fas fa-thumbs-up me-2"></span>
+                            <form style="display:none" id="like-true" action="{{ route('post.like', $post->id) }}" method="post">
+                              @csrf
+                            </form>
+                            Like
+                          </div> --}}
+                          <script>
+                            document.getElementById('post-like-{{ $post->id }}').setAttribute('class', 'rounded d-flex justify-content-center align-items-center pointer text-primary');
+                          </script>
+                        @endif
+                        @endforeach
+
+
+                          <div class="d-flex justify-content-center align-items-center">
                             <a href="{{ '/home/'.$post->id.'/viewpost' }}" class="text-decoration-none text-muted">
                               <span class="fas fa-comment-alt"></span>
                               Comment
                             </a>
-                            </div> --}}
-                        
-                      </div>
+                          </div>                       
+                      </div> 
                       {{-- comments --}}
                       @foreach ($comments as $comment)
                       <div class="d-flex align-items-center my-1">
@@ -104,13 +149,15 @@
                             <!-- menu -->
                             <ul class="dropdown-menu border-0 shadow" aria-labelledby="post1CommentMenuButton">
                               <li class="d-flex align-items-center">
-                                <a class=" dropdown-item d-flex justify-content-around align-items-center fs-7" href="#">Edit Comment</a>
+                                <a class=" dropdown-item d-flex justify-content-around align-items-center fs-7" data-bs-toggle="modal" data-bs-target="#commentModal">Edit Comment</a>
                               </li>
                               <li class="d-flex align-items-center">
                                 <a class="dropdown-item d-flex justify-content-around align-items-center fs-7" onclick="alert('Are you sure you want to delete this comment!');document.getElementById('delete-comment-{{ $comment->id }}').submit()">Delete Comment</a>
+
                                 <form style="display: none" id="{{ 'delete-comment-'.$comment->id }}" action="{{ route('comment.delete', $comment->id) }}" method="post">
                                   @csrf
                                 </form>
+
                               </li>
                             </ul>
                             @endif
@@ -119,6 +166,24 @@
                           <p class="m-0 fs-7 bg-gray p-2 rounded">
                             {{ $comment->body }}
                           </p>
+                        </div>
+                      </div>
+                {{-- Comment Edit Modal --}}
+                      <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true" data-bs-backdrop="true">
+                        <div class="modal-dialog modal-dialog-center">
+                          <div class="modal-content">
+                            <div class="modal-body">
+                              <form action="{{ route('comment.update', $comment->id) }}" method="post">
+                                @csrf
+                                <div>
+                                  <textarea class="form-control border" name="body" id="" cols="30" rows="5">{{ $comment->body }}</textarea>                                  
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="submit" class="btn btn-primary w-100">Update</button>
+                                </div>
+                              </form>          
+                            </div>
+                          </div>
                         </div>
                       </div>
                       @endforeach

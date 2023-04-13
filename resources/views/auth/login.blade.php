@@ -10,12 +10,12 @@
                     <div class="card-body">
                         <h1>Login</h1>
 
-                        @if (Session::has('error'))
+                        {{-- @if (Session::has('error'))
                             <p class="text-danger">{{ Session::get('error') }}</p>
                         @endif
                         @if (Session::has('success'))
                             <p class="text-success">{{ Session::get('success') }}</p>
-                        @endif
+                        @endif --}}
 
                         <form action="{{ route('login') }}" method="post">
                             @csrf

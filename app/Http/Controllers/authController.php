@@ -17,12 +17,13 @@ class authController extends Controller
 
     public function login(Request $request)
     {
-        // dd($request->session()->all());
+        // dd($request->all());
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
+        // $login = Auth::attempt($credentials);
+        // dd($login);
         if (Auth::attempt($credentials)) {
            
             $request->session()->regenerate();
@@ -39,11 +40,13 @@ class authController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|unique:users|email',
-            'password' => 'required'
-        ]);
+        $request->validate(
+            [
+                'name' => 'required',
+                'email' => 'required|unique:users|email',
+                'password' => 'required'
+            ]
+        );
 
         User::create([
             'name' => $request->name,
@@ -55,7 +58,7 @@ class authController extends Controller
             return redirect('home');
         }
         
-        return redirect('register')->withError('Error');
+        return redirect()->back()->withError('Error');
        
     }
 

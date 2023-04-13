@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use exception;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -91,5 +92,40 @@ class postController extends Controller
     {
         Post::where('id', $id)->delete();
         return redirect('home');
+    }
+
+    public function editPost(Post $post)
+    {       
+        return view('postEdit', compact('post'));
+    }
+
+    public function updatePost(Request $request, Post $post)
+    {
+        // dd($request->all());
+        if($request->hasFile('image')){
+            $filename = $request->image->getClientOriginalName();
+            $request->image->storeAs('post-image', $filename, 'public');
+
+            $post->update([
+                'body' => $request->body,
+                'photo' =>$filename
+            ]);
+        }    
+        else{
+            $post->update(['body' => $request->body]);
+        }
+        
+        return redirect('/home/'.$post->id.'/viewpost');
+    }
+
+    public function updateComment(Request $request, $id)
+    {
+        $query = Comment::where('id', $id)->update(['body' => $request->body]);
+        if($query){ 
+            return redirect('home');
+        }
+        else{ 
+            return redirect()->back()->withErrors(['error' => 'Comment could not be updated!']);
+        }
     }
 }
